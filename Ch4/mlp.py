@@ -29,6 +29,9 @@ class mlp:
         self.weights1 = (np.random.rand(self.nin+1,self.nhidden)-0.5)*2/np.sqrt(self.nin)
         self.weights2 = (np.random.rand(self.nhidden+1,self.nout)-0.5)*2/np.sqrt(self.nhidden)
 
+        self.valerrors = []
+        self.trainerrors = []
+
     def earlystopping(self,inputs,targets,valid,validtargets,eta,niterations=100):
     
         valid = np.concatenate((valid,-np.ones((np.shape(valid)[0],1))),axis=1)
@@ -46,6 +49,8 @@ class mlp:
             old_val_error1 = new_val_error
             validout = self.mlpfwd(valid)
             new_val_error = 0.5*np.sum((validtargets-validout)**2)
+
+            self.valerrors.append(new_val_error)
             
         print "Stopped", new_val_error,old_val_error1, old_val_error2
         return new_val_error
@@ -60,10 +65,10 @@ class mlp:
         updatew2 = np.zeros((np.shape(self.weights2)))
             
         for n in range(niterations):
-    
             self.outputs = self.mlpfwd(inputs)
 
             error = 0.5*np.sum((self.outputs-targets)**2)
+
             if (np.mod(n,100)==0):
                 print "Iteration: ",n, " Error: ",error    
 
@@ -83,12 +88,14 @@ class mlp:
             updatew2 = eta*(np.dot(np.transpose(self.hidden),deltao)) + self.momentum*updatew2
             self.weights1 -= updatew1
             self.weights2 -= updatew2
-                
+
             # Randomise order of inputs (not necessary for matrix-based calculation)
             #np.random.shuffle(change)
             #inputs = inputs[change,:]
             #targets = targets[change,:]
-            
+        self.trainerrors.append(error)
+
+
     def mlpfwd(self,inputs):
         """ Run the network forward """
 

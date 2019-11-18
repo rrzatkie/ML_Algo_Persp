@@ -44,7 +44,7 @@ X_validate = vectorizer.transform(validate.text.values).toarray()
 Y_validate = validate.sentiment.values
 
 # %%
-net = mlp.mlp(X_train,Y_train.reshape(Y_train.shape[0],1),4,outtype='softmax')
+net = mlp.mlp(X_train,Y_train.reshape(Y_train.shape[0],1),4,outtype='logistic')
 net.mlptrain(X_train,Y_train.reshape(Y_train.shape[0],1),0.25,101)
 
 # Use early stopping

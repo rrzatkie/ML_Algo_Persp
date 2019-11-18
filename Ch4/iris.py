@@ -36,7 +36,7 @@ import numpy as np
 # Preprocessor to remove the test (only needed once)
 #preprocessIris('/Users/srmarsla/Book/Datasets/Iris/iris.data','iris_proc.data')
 
-iris = np.loadtxt('iris_proc.data',delimiter=',')
+iris = np.loadtxt('C:\work\Tutorials\Github repos\ML_Algo_Persp\Ch4\iris_proc.data',delimiter=',')
 iris[:,:4] = iris[:,:4]-iris[:,:4].mean(axis=0)
 imax = np.concatenate((iris.max(axis=0)*np.ones((1,5)),np.abs(iris.min(axis=0)*np.ones((1,5)))),axis=0).max(axis=0)
 iris[:,:4] = iris[:,:4]/imax[:4]
@@ -68,6 +68,6 @@ testt = target[3::4]
 
 # Train the network
 import mlp
-net = mlp.mlp(train,traint,5,outtype='logistic')
+net = mlp.mlp(train,traint,5,outtype='softmax')
 net.earlystopping(train,traint,valid,validt,0.1)
 net.confmat(test,testt)
